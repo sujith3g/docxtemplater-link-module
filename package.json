@@ -14,11 +14,7 @@
     "docx"
   ],
   "devDependencies": {
-    "chai": "^1.10.0",
-    "gulp": "~3.8.0",
-    "gulp-coffee": "~2.0.1",
-    "gulp-uglify": "~0.3.0",
-    "gulp-watch": "^4.3.5"
+    "chai": "^1.10.0"
   },
   "repository": {
     "type": "git",
