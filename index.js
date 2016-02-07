@@ -8,7 +8,6 @@ fs = require('fs');
 
 LinkModule = (function() {
 
-
   LinkModule.prototype.name = 'link';
   function LinkModule(options){
     this.options = options | {};
@@ -24,12 +23,14 @@ LinkModule = (function() {
       return this.finished();
     }
   };
+
   LinkModule.prototype.handle = function(type, data) {
     if (type === 'replaceTag' && data === this.name) {
       this.replaceTag();
     }
     return null;
   };
+
   LinkModule.prototype.get = function(data) {
     var templaterState;
     if (data === 'loopType') {
@@ -67,6 +68,7 @@ LinkModule = (function() {
     // console.log("tag",tagXml);
     return this.replaceBy(newText, tagXml);
   };
+
   LinkModule.prototype.getLinkXml = function(_arg) {
     var linkId = _arg.linkID, linkText = _arg.linkText;
     return  "<w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink>";
