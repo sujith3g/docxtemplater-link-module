@@ -9,7 +9,7 @@ You will need docxtemplater v1: `npm install docxtemplater`
 install this module: `npm install docxtemplater-link-module`
 
 ## Usage
-Your docx should contain the text: {^chart}
+Your docx should contain the text: {^link}
 
 ```js
 
