@@ -4,9 +4,9 @@ Hyperlink module for docxtemplater
 
 
 ## Installation:
-You will need docxtemplater v1: npm install docxtemplater
+You will need docxtemplater v1: `npm install docxtemplater`
 
-install this module: npm install docxtemplater-link-module
+install this module: `npm install docxtemplater-link-module`
 
 ## Usage
 Your docx should contain the text: {^chart}
