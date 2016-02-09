@@ -1,6 +1,6 @@
 
 # docxtemplater-link-module
-Hyperlink module for docxtemplater
+Hyperlink module for [docxtemplater](https://github.com/open-xml-templating/docxtemplater)
 
 
 ## Installation:
