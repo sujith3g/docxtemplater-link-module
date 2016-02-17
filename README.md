@@ -2,6 +2,7 @@
 # docxtemplater-link-module
 Hyperlink module for docxtemplater
 
+[![Download count](https://img.shields.io/npm/dt/docxtemplater-link-module.svg?style=flat)](https://www.npmjs.org/package/docxtemplater-link-module)
 
 ## Installation:
 You will need docxtemplater v1: `npm install docxtemplater`
