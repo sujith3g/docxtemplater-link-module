@@ -1,6 +1,6 @@
 
 # docxtemplater-link-module
-Hyperlink module for docxtemplater
+Hyperlink module for [docxtemplater](https://github.com/open-xml-templating/docxtemplater)
 
 [![Download count](https://img.shields.io/npm/dt/docxtemplater-link-module.svg?style=flat)](https://www.npmjs.org/package/docxtemplater-link-module)
 
@@ -39,3 +39,4 @@ fs.writeFile("test.docx", buffer);
 ## Testing 
 
 You can test that everything works fine using the command `mocha`. This will also create 2 docx files under the root directory that you can open to check if the docx are correct
+
