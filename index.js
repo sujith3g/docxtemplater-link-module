@@ -1,10 +1,9 @@
-var LinkManager, LinkModule, SubContent, fs;
+var LinkManager, LinkModule, SubContent;
 
 SubContent = require('docxtemplater').SubContent;
 
 LinkManager = require('./src/linkManager');
 
-fs = require('fs');
 
 LinkModule = (function() {
 

@@ -1,6 +1,6 @@
 {
   "name": "docxtemplater-link-module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Hyperlink module for docxtemplater",
   "main": "index.js",
   "scripts": {
