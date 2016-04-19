@@ -1,9 +1,11 @@
 language: node_js
 
-sudo: false
+install: 
+- 'npm install'
+- 'npm -g install mocha'
 
 script:
-  - npm test
+  - 'mocha'
 
 node_js:
   - "0.12"
