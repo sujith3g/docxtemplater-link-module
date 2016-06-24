@@ -3,6 +3,7 @@
 Hyperlink module for [docxtemplater](https://github.com/open-xml-templating/docxtemplater)
 
 [![Download count](https://img.shields.io/npm/dt/docxtemplater-link-module.svg?style=flat)](https://www.npmjs.org/package/docxtemplater-link-module)
+[![Build Status](https://travis-ci.org/sujith3g/docxtemplater-link-module.svg?branch=master)](https://travis-ci.org/sujith3g/docxtemplater-link-module)
 
 ## Installation:
 You will need docxtemplater v1: `npm install docxtemplater`
