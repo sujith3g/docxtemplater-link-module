@@ -23,7 +23,7 @@
   "author": "sujith <sujith3g(at)gmail(dot)com>",
   "license": "MIT",
   "dependencies": {
-    "docxtemplater": "^1.0.5",
+    "docxtemplater": "^2.1.1",
     "gulp-browserify": "^0.5.0",
     "jszip": "^2.4.0",
     "xmldom": "^0.1.19"
