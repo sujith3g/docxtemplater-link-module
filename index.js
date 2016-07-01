@@ -59,7 +59,8 @@ LinkModule = (function() {
     // console.log(tag, linkData, filename);
     linkId = this.linkManager.addLinkRels(filename, linkData.url);
     this.linkManager.addLinkStyle();
-    tagXml = this.manager.getInstance('xmlTemplater').tagXml;
+    var xmlTemplater = this.manager.getInstance("xmlTemplater");
+    tagXml = xmlTemplater.fileTypeConfig.tagsXmlArray[0];
     newText = this.getLinkXml({
       linkID : linkId,
       linkText : linkData.text
