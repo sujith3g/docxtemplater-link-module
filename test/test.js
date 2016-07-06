@@ -6,7 +6,7 @@
 
   expect = require('chai').expect;
 
-  fileNames = ['linkExample.docx', 'loopLinkExample.docx'];
+  fileNames = ['example-text+href.docx', 'example-text+href+loop.docx', 'example-href.docx', 'example-href+loop.docx', 'example-mailto.docx', 'example-mailto+loop.docx'];
 
   LinkModule = require('../index.js');
 
@@ -33,9 +33,9 @@
     docX[name].loadedContent = content;
   }
 
-  describe('adding with {^ link} syntax', function() {
+  describe('adding with {^ link} syntax (with text & href)', function() {
     var linkModule, out, zip;
-    name = 'linkExample.docx';
+    name = 'example-text+href.docx';
     linkModule = new LinkModule();
     docX[name].attachModule(linkModule);
     out = docX[name].load(docX[name].loadedContent).setData({
@@ -50,7 +50,7 @@
       relsFile = zip.files['word/_rels/document.xml.rels'];
       expect(relsFile != null).to.equal(true);
       relsFileContent = relsFile.asText();
-      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.microsoft.com/office/2007/relationships/stylesWithEffects\" Target=\"stylesWithEffects.xml\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com\" TargetMode=\"External\"/></Relationships>");
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com\" TargetMode=\"External\"/></Relationships>");
 
     });
     it('should add HyperlinkStyle if it is not present', function() {
@@ -61,13 +61,13 @@
       expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
       return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
     });
-    return fs.writeFile('test.docx', zip.generate({
+    return fs.writeFile('output-text+href.docx', zip.generate({
       type: "nodebuffer"
     }));
   });
-  describe('adding with {^ link} syntax inside a loop', function() {
+  describe('adding with {^ link} syntax inside a loop (with text & href)', function() {
     var linkModule, out, zip;
-    name = 'loopLinkExample.docx';
+    name = 'example-text+href+loop.docx';
     linkModule = new LinkModule();
     docX[name].attachModule(linkModule);
     out = docX[name].load(docX[name].loadedContent).setData({
@@ -93,7 +93,7 @@
       relsFile = zip.files['word/_rels/document.xml.rels'];
       expect(relsFile != null).to.equal(true);
       relsFileContent = relsFile.asText();
-      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.microsoft.com/office/2007/relationships/stylesWithEffects\" Target=\"stylesWithEffects.xml\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com/?q=Euro%20Giant\" TargetMode=\"External\"/><Relationship Id=\"rId8\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://googl.com/?q=USA%20Giant\" TargetMode=\"External\"/></Relationships>");
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com/?q=Euro%20Giant\" TargetMode=\"External\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://googl.com/?q=USA%20Giant\" TargetMode=\"External\"/></Relationships>");
     });
     it('should add HyperlinkStyle if it is not present', function() {
       var styleFile, styleFileContent;
@@ -103,8 +103,146 @@
       expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
       return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
     });
-    return fs.writeFile('looptest.docx', zip.generate({
+    return fs.writeFile('output-text+href+loop.docx', zip.generate({
       type: "nodebuffer"
     }));
   });
 
+
+
+  describe('adding with {^ link} syntax (href only)', function() {
+    var linkModule, out, zip;
+    name = 'example-href.docx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    out = docX[name].load(docX[name].loadedContent).setData({
+      link: "http://google.com"//The particularity of this test is that we are passing in a string rather than an object.
+    }).render();
+    zip = out.getZip();
+    it('should create relationship in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['word/_rels/document.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com\" TargetMode=\"External\"/></Relationships>");
+
+    });
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['word/styles.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
+      return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
+    });
+    return fs.writeFile('output-href.docx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });
+
+  describe('adding with {^ link} syntax inside a loop (href only)', function() {
+    var linkModule, out, zip;
+    name = 'example-href+loop.docx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    out = docX[name].load(docX[name].loadedContent).setData({
+      subsidiaries: [
+        {
+          title: "Google",
+          link: "http://google.com"
+        }, {
+          title: "Bing",
+          link: "https://www.bing.com"
+        }
+      ]
+    }).render();
+    zip = out.getZip();
+    it('should create two relationships in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['word/_rels/document.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com\" TargetMode=\"External\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://www.bing.com\" TargetMode=\"External\"/></Relationships>");
+    });
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['word/styles.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
+      return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
+    });
+    return fs.writeFile('output-href+loop.docx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });
+
+
+
+
+  describe('adding with {^ link} syntax (email address)', function() {
+    var linkModule, out, zip;
+    name = 'example-mailto.docx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    out = docX[name].load(docX[name].loadedContent).setData({
+      link: "john-smith@example.com"
+    }).render();
+    zip = out.getZip();
+    it('should create relationship in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['word/_rels/document.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"mailto:john-smith@example.com\" TargetMode=\"External\"/></Relationships>");
+
+    });
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['word/styles.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
+      return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
+    });
+    return fs.writeFile('output-mailto.docx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });
+
+  describe('adding with {^ link} syntax inside a loop (email address)', function() {
+    var linkModule, out, zip;
+    name = 'example-mailto+loop.docx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    out = docX[name].load(docX[name].loadedContent).setData({
+      subsidiaries: [
+        {
+          title: "John Smith",
+          link: "john-smith@example.com"
+        }, {
+          title: "Bill Knott",
+          link: "bill.knott@example.com"
+        }
+      ]
+    }).render();
+    zip = out.getZip();
+    it('should create two relationships in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['word/_rels/document.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"mailto:john-smith@example.com\" TargetMode=\"External\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"mailto:bill.knott@example.com\" TargetMode=\"External\"/></Relationships>");
+    });
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['word/styles.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("w:styleId=\"Hyperlink\"");
+      return expect(styleFileContent).to.contain("w:val=\"Hyperlink\"");
+    });
+    return fs.writeFile('output-mailto+loop.docx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });

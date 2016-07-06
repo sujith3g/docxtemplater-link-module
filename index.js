@@ -57,13 +57,23 @@ LinkModule = (function() {
       return;
     }
     // console.log(tag, linkData, filename);
-    linkId = this.linkManager.addLinkRels(filename, linkData.url);
+    var url, text;
+    if(typeof linkData === "string") {
+        var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+        url = emailRegex.test(linkData) ? "mailto:" + linkData : linkData;
+        text = linkData;
+    }
+    else {
+        url = linkData.url;
+        text = linkData.text;
+    }
+    linkId = this.linkManager.addLinkRels(filename, url);
     this.linkManager.addLinkStyle();
     var xmlTemplater = this.manager.getInstance("xmlTemplater");
     tagXml = xmlTemplater.fileTypeConfig.tagsXmlArray[0];
     newText = this.getLinkXml({
       linkID : linkId,
-      linkText : linkData.text
+      linkText : text
     });
     // console.log("tag",tagXml);
     return this.replaceBy(newText, tagXml);
