@@ -8,33 +8,84 @@ Hyperlink module for [docxtemplater](https://github.com/open-xml-templating/docx
 ## Installation:
 You will need docxtemplater v2.1.1: `npm install docxtemplater`
 
-install this module: `npm install docxtemplater-link-module`
+Install this module: `npm install docxtemplater-link-module`
 
-## Usage
-Your docx should contain the text: {^link}
+## Usage: Text and URL
+
+The example below will displays the following hyperlink:
+> Lorem ipsum [dolor sit](http://google.com) amet.
+
+Your docx should contain the text: `Lorem ipsum {^link} amet.`.
 
 ```js
-
 var fs = require('fs');
 var LinkModule = require('docxtemplater-link-module');
 var linkModule = new LinkModule();
  
 var docx = new DocxGen()
-  .attachModule(linkModule)
-  .load(content)
-  .setData({
-    link : {
-      text : "link to Google",
-      url : "http://google.com"
-    }
-    }).
-    render();
+	.attachModule(linkModule)
+	.load(content)
+	.setData({
+		link : {
+			text : "dolor sit",
+			url : "http://google.com"
+		}
+	}).
+	render();
 var buffer = docx
-  .getZip()
-  .generate({type:"nodebuffer"});
- 
+	.getZip()
+	.generate({type:"nodebuffer"});
 fs.writeFile("test.docx", buffer);
+```
 
+## Usage: URL only
+
+The example below will displays the following hyperlink:
+> Lorem ipsum [http://google.com](http://google.com) amet.
+
+Your docx should contain the text: `Lorem ipsum {^link} amet.`.
+
+```js
+var fs = require('fs');
+var LinkModule = require('docxtemplater-link-module');
+var linkModule = new LinkModule();
+ 
+var docx = new DocxGen()
+	.attachModule(linkModule)
+	.load(content)
+	.setData({
+		link : "http://google.com"
+	}).
+	render();
+var buffer = docx
+	.getZip()
+	.generate({type:"nodebuffer"});
+fs.writeFile("test.docx", buffer);
+```
+
+## Usage: Email address support
+
+The example below will displays the following hyperlink:
+> Lorem ipsum [john.smith@example.com](mailto:john.smith@example.com) amet.
+
+Your docx should contain the text: `Lorem ipsum {^link} amet.`.
+
+```js
+var fs = require('fs');
+var LinkModule = require('docxtemplater-link-module');
+var linkModule = new LinkModule();
+ 
+var docx = new DocxGen()
+	.attachModule(linkModule)
+	.load(content)
+	.setData({
+		link : "john.smith@example.com"
+	}).
+	render();
+var buffer = docx
+	.getZip()
+	.generate({type:"nodebuffer"});
+fs.writeFile("test.docx", buffer);
 ```
 
 ## Testing 
