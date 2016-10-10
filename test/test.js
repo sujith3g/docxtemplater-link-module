@@ -6,7 +6,7 @@
 
   expect = require('chai').expect;
 
-  fileNames = ['example-text+href.docx', 'example-text+href+loop.docx', 'example-href.docx', 'example-href+loop.docx', 'example-mailto.docx', 'example-mailto+loop.docx'];
+  fileNames = ['example-text+href.docx', 'example-text+href+loop.docx', 'example-href.docx', 'example-href+loop.docx', 'example-mailto.docx', 'example-mailto+loop.docx', 'example-href.pptx'];
 
   LinkModule = require('../index.js');
 

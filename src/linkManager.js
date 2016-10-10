@@ -23,7 +23,7 @@ module.exports = LinkManager = (function() {
         return _this.zip.files[_this.filePath];
       };
     })(this);
-    file = loadFile("word/_rels/" + this.endFileName + ".xml.rels") || loadFile("word/_rels/document.xml.rels");
+    file = loadFile("word/_rels/" + this.endFileName + ".xml.rels") || loadFile("word/_rels/document.xml.rels") || loadFile("ppt/_rels/" + this.endFileName + ".xml.rels") || loadFile("ppt/_rels/presentation.xml.rels");
     if (file === void 0) {
       return;
     }
