@@ -81,6 +81,9 @@ LinkModule = (function() {
 
   LinkModule.prototype.getLinkXml = function(_arg) {
     var linkId = _arg.linkID, linkText = _arg.linkText;
+    if(this.linkManager.pptx) {
+      return "<a:t> </a:t></a:r><a:r><a:rPr lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
+    }
     return  "<w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink>";
   }
   LinkModule.prototype.replaceBy = function(text, outsideElement) {
