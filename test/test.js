@@ -246,3 +246,47 @@
       type: "nodebuffer"
     }));
   });
+
+
+  describe('adding with {^ link} syntax in a powerpoint', function() {
+    var linkModule, out, zip;
+    name = 'example-href.pptx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    docX[name].setOptions({ fileType: 'pptx' });
+    out = docX[name].load(docX[name].loadedContent).setData({
+      description: "Testing the link feature",
+      link: {
+        text : "Hakuna matata",
+        url : "http://google.com"
+      }
+    }).render();
+    zip = out.getZip();
+    it('should insert the label in the slide file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['ppt/slides/slide2.xml'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId2\"/></a:rPr><a:t>Hakuna matata</a:t>");
+    });
+
+    it('should create relationship in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['ppt/slides/_rels/slide2.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.contain("<Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"http://google.com\" TargetMode=\"External\"/>");
+    });
+
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['ppt/presentation.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("<p:extLst>");
+      return expect(styleFileContent).to.contain("<p:ext uri=\"{EFAFB233-063F-42B5-8137-9DF3F51BA10A}\">");
+    });
+    return fs.writeFile('output-text+href.pptx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });

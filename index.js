@@ -56,7 +56,6 @@ LinkModule = (function() {
     if (!linkRels) {
       return;
     }
-    // console.log(tag, linkData, filename);
     var url, text;
     if(typeof linkData === "string") {
         var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
@@ -75,7 +74,6 @@ LinkModule = (function() {
       linkID : linkId,
       linkText : text
     });
-    // console.log("tag",tagXml);
     return this.replaceBy(newText, tagXml);
   };
 
