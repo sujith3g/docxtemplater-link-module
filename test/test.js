@@ -373,7 +373,7 @@
       expect(styleFileContent).to.contain("<p:extLst>");
       return expect(styleFileContent).to.contain("<p:ext uri=\"{EFAFB233-063F-42B5-8137-9DF3F51BA10A}\">");
     });
-    return fs.writeFile('output-mailto.pptx', zip.generate({
+    return fs.writeFile('output-mailto+loop.pptx', zip.generate({
       type: "nodebuffer"
     }));
   });
