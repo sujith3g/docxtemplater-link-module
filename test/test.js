@@ -6,7 +6,7 @@
 
   expect = require('chai').expect;
 
-  fileNames = ['example-text+href.docx', 'example-text+href+loop.docx', 'example-href.docx', 'example-href+loop.docx', 'example-mailto.docx', 'example-mailto+loop.docx', 'example-href.pptx', 'example-mailto.pptx'];
+  fileNames = ['example-text+href.docx', 'example-text+href+loop.docx', 'example-href.docx', 'example-href+loop.docx', 'example-mailto.docx', 'example-mailto+loop.docx', 'example-href.pptx', 'example-mailto.pptx','example-mailto+loop.pptx'];
 
   LinkModule = require('../index.js');
 
@@ -327,3 +327,54 @@
       type: "nodebuffer"
     }));
   });
+
+  describe('adding with {^ link} syntax inside a loop (email address)', function() {
+    var linkModule, out, zip;
+    name = 'example-mailto+loop.pptx';
+    linkModule = new LinkModule();
+    docX[name].attachModule(linkModule);
+    docX[name].setOptions({ fileType: 'pptx' });
+    out = docX[name].load(docX[name].loadedContent).setData({
+      subsidiaries: [
+        {
+          title: "John Smith",
+          link: "john-smith@example.com"
+        }, {
+          title: "Bill Knott",
+          link: "bill.knott@example.com"
+        }
+      ]
+    }).render();
+    zip = out.getZip();
+    it('should insert the label in the slide file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['ppt/slides/slide1.xml'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+
+      expect(relsFileContent).to.contain("<a:t>John Smith Sales for Q1</a:t>");
+      expect(relsFileContent).to.contain("<a:t>Bill Knott Sales for Q1</a:t>");
+      expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId2\"/></a:rPr><a:t>john-smith@example.com</a:t>");
+      return expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId3\"/></a:rPr><a:t>bill.knott@example.com</a:t>");
+    });
+    it('should create relationship in rels file', function() {
+      var relsFile, relsFileContent;
+      relsFile = zip.files['ppt/slides/_rels/slide1.xml.rels'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      expect(relsFileContent).to.contain("<Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"mailto:john-smith@example.com\" TargetMode=\"External\"/>");
+      return expect(relsFileContent).to.contain("<Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"mailto:bill.knott@example.com\" TargetMode=\"External\"/>");
+    });
+    it('should add HyperlinkStyle if it is not present', function() {
+      var styleFile, styleFileContent;
+      styleFile = zip.files['ppt/presentation.xml'];
+      expect(styleFile != null).to.equal(true);
+      styleFileContent = styleFile.asText();
+      expect(styleFileContent).to.contain("<p:extLst>");
+      return expect(styleFileContent).to.contain("<p:ext uri=\"{EFAFB233-063F-42B5-8137-9DF3F51BA10A}\">");
+    });
+    return fs.writeFile('output-mailto.pptx', zip.generate({
+      type: "nodebuffer"
+    }));
+  });
+
