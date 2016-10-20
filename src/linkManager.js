@@ -74,6 +74,9 @@ module.exports = LinkManager = (function() {
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tag = _ref[_i];
         isLinkStyle = (tag.getAttribute("uri") == "{EFAFB233-063F-42B5-8137-9DF3F51BA10A}");
+        if (isLinkStyle) {
+          break;
+        }
       }
       if(!isLinkStyle) {
         var styles, newStyle, nameTag, basedOn, uiPrio, unHide, rsId;
@@ -89,22 +92,23 @@ module.exports = LinkManager = (function() {
           presentation.appendChild(newStyleXml);
         }
       }
-    }
-    _ref = styleXml.getElementsByTagName('w:style');
-    // console.log("ref.length", _ref.length);
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      tag = _ref[_i];
-      isLinkStyle = (tag.getAttribute("w:styleId") == "Hyperlink");
-    }
-    //add Hyperlink style if doesn't exist
-    //<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:basedOn w:val="DefaultParagraphFont"/><w:uiPriority w:val="99"/><w:unhideWhenUsed/><w:rsid w:val="00052F25"/><w:rPr><w:color w:val="0000FF" w:themeColor="hyperlink"/><w:u w:val="single"/></w:rPr></w:style>
-    // console.log("isLinkStyle", isLinkStyle);
-    if(!isLinkStyle) {
-      var styles, newStyle, nameTag, basedOn, uiPrio, unHide, rsId;
-      styles = styleXml.getElementsByTagName("w:styles")[0];
-      newStyleStr = "<w:style w:type=\"character\" w:styleId=\"Hyperlink\"><w:name w:val=\"Hyperlink\"/><w:basedOn w:val=\"DefaultParagraphFont\"/><w:uiPriority w:val=\"99\"/><w:unhideWhenUsed/><w:rsid w:val=\"00052F25\"/><w:rPr><w:color w:val=\"0000FF\" w:themeColor=\"hyperlink\"/><w:u w:val=\"single\"/></w:rPr></w:style>";
-      newStyleXml = DocUtils.Str2xml(newStyleStr);
-      styles.appendChild(newStyleXml);
+    } else {
+      _ref = styleXml.getElementsByTagName('w:style');
+      // console.log("ref.length", _ref.length);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tag = _ref[_i];
+        isLinkStyle = (tag.getAttribute("w:styleId") == "Hyperlink");
+      }
+      //add Hyperlink style if doesn't exist
+      //<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:basedOn w:val="DefaultParagraphFont"/><w:uiPriority w:val="99"/><w:unhideWhenUsed/><w:rsid w:val="00052F25"/><w:rPr><w:color w:val="0000FF" w:themeColor="hyperlink"/><w:u w:val="single"/></w:rPr></w:style>
+      // console.log("isLinkStyle", isLinkStyle);
+      if(!isLinkStyle) {
+        var styles, newStyle, nameTag, basedOn, uiPrio, unHide, rsId;
+        styles = styleXml.getElementsByTagName("w:styles")[0];
+        newStyleStr = "<w:style w:type=\"character\" w:styleId=\"Hyperlink\"><w:name w:val=\"Hyperlink\"/><w:basedOn w:val=\"DefaultParagraphFont\"/><w:uiPriority w:val=\"99\"/><w:unhideWhenUsed/><w:rsid w:val=\"00052F25\"/><w:rPr><w:color w:val=\"0000FF\" w:themeColor=\"hyperlink\"/><w:u w:val=\"single\"/></w:rPr></w:style>";
+        newStyleXml = DocUtils.Str2xml(newStyleStr);
+        styles.appendChild(newStyleXml);
+      }
     }
     this.zip.file(stylePath, DocUtils.encodeUtf8(DocUtils.xml2Str(styleXml)), {});
     return this;

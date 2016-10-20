@@ -31,7 +31,7 @@ DocUtils.decodeUtf8 = function(s) {
     if (s === void 0) {
       return void 0;
     }
-    return decodeURIComponent(escape(DocUtils.convertSpaces(s)));
+    return decodeURIComponent(encodeURIComponent(DocUtils.convertSpaces(s)));
   } catch (_error) {
     e = _error;
     console.error(s);
@@ -41,7 +41,7 @@ DocUtils.decodeUtf8 = function(s) {
 };
 
 DocUtils.encodeUtf8 = function(s) {
-  return unescape(encodeURIComponent(s));
+  return decodeURIComponent(encodeURIComponent(s));
 };
 
 DocUtils.convertSpaces = function(s) {
