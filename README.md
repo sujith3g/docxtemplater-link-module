@@ -20,6 +20,8 @@ Your docx should contain the text: `Lorem ipsum {^link} amet.`.
 
 ```js
 var fs = require('fs');
+var content = fs.readFileSync(__dirname + "/example-href.docx", "binary");
+var DocxGen = require('docxtemplater');
 var LinkModule = require('docxtemplater-link-module');
 var linkModule = new LinkModule();
  
@@ -48,6 +50,8 @@ Your docx should contain the text: `Lorem ipsum {^link} amet.`.
 
 ```js
 var fs = require('fs');
+var content = fs.readFileSync(__dirname + "/example-href.docx", "binary");
+var DocxGen = require('docxtemplater');
 var LinkModule = require('docxtemplater-link-module');
 var linkModule = new LinkModule();
  
@@ -73,6 +77,8 @@ Your docx should contain the text: `Lorem ipsum {^link} amet.`.
 
 ```js
 var fs = require('fs');
+var content = fs.readFileSync(__dirname + "/example-mailto.docx", "binary");
+var DocxGen = require('docxtemplater');
 var LinkModule = require('docxtemplater-link-module');
 var linkModule = new LinkModule();
  
@@ -88,6 +94,65 @@ var buffer = docx
 	.generate({type:"nodebuffer"});
 fs.writeFile("test.docx", buffer);
 ```
+
+## Usage: Text and URL in powerpoint pptx
+
+The example below will displays the following hyperlink powerpoint:
+> Lorem ipsum [dolor sit](http://google.com) amet.
+
+Your pptx should contain the text: `Lorem ipsum {^link} amet.`.
+
+```js
+var fs = require('fs');
+var content = fs.readFileSync(__dirname + "/example-href.pptx", "binary");
+var DocxGen = require('docxtemplater');
+var LinkModule = require('docxtemplater-link-module');
+var linkModule = new LinkModule();
+ 
+var docx = new DocxGen()
+	.attachModule(linkModule)
+	.setOption({ fileType : "pptx" })
+	.load(content)
+	.setData({
+		link : {
+			text : "dolor sit",
+			url : "http://google.com"
+		}
+	}).
+	render();
+var buffer = docx
+	.getZip()
+	.generate({type:"nodebuffer"});
+fs.writeFile("output-href.pptx", buffer);
+```
+
+## Usage: Email address support in powerpoint
+
+The example below will displays the following hyperlink:
+> Lorem ipsum [john.smith@example.com](mailto:john.smith@example.com) amet.
+
+Your pptx should contain the text: `Lorem ipsum {^link} amet.`.
+
+```js
+var fs = require('fs');
+var content = fs.readFileSync(__dirname + "/example-mailto.pptx", "binary");
+var DocxGen = require('docxtemplater');
+var LinkModule = require('docxtemplater-link-module');
+var linkModule = new LinkModule();
+ 
+var docx = new DocxGen()
+	.attachModule(linkModule)
+	.load(content)
+	.setData({
+		link : "john.smith@example.com"
+	}).
+	render();
+var buffer = docx
+	.getZip()
+	.generate({type:"nodebuffer"});
+fs.writeFile("output-mailto.pptx", buffer);
+```
+
 
 ## Testing 
 
