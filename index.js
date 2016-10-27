@@ -63,8 +63,8 @@ LinkModule = (function() {
         text = linkData;
     }
     else {
-        url = linkData.url;
-        text = linkData.text;
+        url = linkData.url || linkData.URL;
+        text = linkData.text || linkData.TEXT;
     }
     linkId = this.linkManager.addLinkRels(filename, url);
     this.linkManager.addLinkStyle();
