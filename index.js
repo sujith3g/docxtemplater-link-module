@@ -4,14 +4,12 @@ SubContent = require('docxtemplater').SubContent;
 
 LinkManager = require('./src/linkManager');
 
-
-LinkModule = (function() {
-
+LinkModule = (function () {
   LinkModule.prototype.name = 'link';
-  function LinkModule(options){
+  function LinkModule (options) {
     this.options = options | {};
   }
-  LinkModule.prototype.handleEvent = function(event, eventData) {
+  LinkModule.prototype.handleEvent = function (event, eventData) {
     var gen;
     if (event === 'rendering-file') {
       this.renderingFileName = eventData;
@@ -23,14 +21,14 @@ LinkModule = (function() {
     }
   };
 
-  LinkModule.prototype.handle = function(type, data) {
+  LinkModule.prototype.handle = function (type, data) {
     if (type === 'replaceTag' && data === this.name) {
       this.replaceTag();
     }
     return null;
   };
 
-  LinkModule.prototype.get = function(data) {
+  LinkModule.prototype.get = function (data) {
     var templaterState;
     if (data === 'loopType') {
       templaterState = this.manager.getInstance('templaterState');
@@ -41,7 +39,7 @@ LinkModule = (function() {
     return null;
   };
 
-  LinkModule.prototype.replaceTag = function() {
+  LinkModule.prototype.replaceTag = function () {
     var scopeManager, templaterState, gen, tag, linkData, linkRels, linkId, filename;
     scopeManager = this.manager.getInstance('scopeManager');
     templaterState = this.manager.getInstance('templaterState');
@@ -57,43 +55,60 @@ LinkModule = (function() {
       return;
     }
     var url, text;
-    if(typeof linkData === "string") {
-        var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
-        url = emailRegex.test(linkData) ? "mailto:" + linkData : linkData;
-        text = linkData;
-    }
-    else {
-        url = linkData.url;
-        text = linkData.text;
+    if (typeof linkData === 'string') {
+      var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+      url = emailRegex.test(linkData) ? 'mailto:' + linkData : linkData;
+      text = linkData;
+    }else {
+      url = linkData.url;
+      text = linkData.text;
     }
     linkId = this.linkManager.addLinkRels(filename, url);
     this.linkManager.addLinkStyle();
-    var xmlTemplater = this.manager.getInstance("xmlTemplater");
+    var xmlTemplater = this.manager.getInstance('xmlTemplater');
     tagXml = xmlTemplater.fileTypeConfig.tagsXmlArray[0];
     newText = this.getLinkXml({
-      linkID : linkId,
-      linkText : text
+      linkID: linkId,
+      linkText: text
     });
     return this.replaceBy(newText, tagXml);
   };
 
-  LinkModule.prototype.getLinkXml = function(_arg) {
+  LinkModule.prototype.getLinkXml = function (_arg) {
     var linkId = _arg.linkID, linkText = _arg.linkText;
-    if(this.linkManager.pptx) {
-      return "<a:t> </a:t></a:r><a:r><a:rPr lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
+    if (this.linkManager.pptx) {
+      return '</a:t></a:r><a:r><a:rPr lang="en-US" dirty="0" smtClean="0"><a:hlinkClick r:id="rId' + linkId + '"/></a:rPr><a:t>' + linkText + '</a:t><a:t xml:space="preserve">';
     }
-    return  "<w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink>";
-  }
-  LinkModule.prototype.replaceBy = function(text, outsideElement) {
-    var subContent, templaterState, xmlTemplater;
-    xmlTemplater = this.manager.getInstance('xmlTemplater');
-    templaterState = this.manager.getInstance('templaterState');
-    subContent = new SubContent(xmlTemplater.content).getInnerTag(templaterState).getOuterXml(outsideElement);
-    // console.log("subContent", subContent);
-    return xmlTemplater.replaceXml(subContent, text);
+    return '</w:t></w:r><w:hyperlink r:id="rId' + linkId + '" w:history="1"><w:bookmarkStart w:id="0" w:name="_GoBack"/><w:bookmarkEnd w:id="0"/><w:r w:rsidR="00052F25" w:rsidRPr="00052F25"><w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr><w:t>' + linkText + '</w:t></w:r></w:hyperlink><w:r><w:t xml:space="preserve">';
   };
 
-  LinkModule.prototype.finished = function() {};
+  LinkModule.prototype.replaceBy = function (text, outsideElement) {
+    var innerTag = this.getInnerTag().text;
+    var subContent = this.addAttribute(outsideElement, 'xml:space', '"preserve"');
+    return this.manager.getInstance('xmlTemplater').replaceXml(subContent, subContent.text.replace(innerTag, text));
+  };
+
+  LinkModule.prototype.addAttribute = function(outsideElement, attribute, value){
+    var subContent = this.getOuterXml(outsideElement);
+    if (subContent.text.indexOf(attribute) < 0) {
+      var replaceRegex = '<' + outsideElement;
+      var replaceWith = '<' + outsideElement + ' ' + attribute + '=' + value;
+      subContent.text = subContent.text.replace(new RegExp(replaceRegex, 'g'), replaceWith);
+    }
+    return subContent;
+  };
+
+  LinkModule.prototype.getInnerTag = function () {
+    var xmlTemplater = this.manager.getInstance('xmlTemplater');
+    var templaterState = this.manager.getInstance('templaterState');
+    return new SubContent(xmlTemplater.content).getInnerTag(templaterState);
+  }
+
+  LinkModule.prototype.getOuterXml = function (outsideElement) {
+    return this.getInnerTag().getOuterXml(outsideElement);
+  }
+
+  LinkModule.prototype.finished = function () {};
 
   return LinkModule;
 })();
