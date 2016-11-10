@@ -92,23 +92,37 @@ LinkModule = (function() {
 
   LinkModule.prototype.getLinkXml = function(_arg) {
     var linkId = _arg.linkID, linkText = _arg.linkText, size = _arg.size;
-    if(this.linkManager.pptx) {
-      if (size !== -1) {
-        return "<a:t> </a:t></a:r><a:r><a:rPr sz=\"" + size + "\" lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
-      } else {
-        return "<a:t> </a:t></a:r><a:r><a:rPr lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
-      }
+    if (this.linkManager.pptx) {
+      return "</a:t></a:r><a:r><a:rPr " + (size !== -1 ? "sz=\"" + size + "\" " : "") + "lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t></a:r><a:r><a:t xml:space=\"preserve\">";
     }
-    return  "<w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink>";
+    return  "</w:t></w:r><w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink><w:r><w:t xml:space=\"preserve\">";
   }
-  LinkModule.prototype.replaceBy = function(text, outsideElement) {
-    var subContent, templaterState, xmlTemplater;
-    xmlTemplater = this.manager.getInstance('xmlTemplater');
-    templaterState = this.manager.getInstance('templaterState');
-    subContent = new SubContent(xmlTemplater.content).getInnerTag(templaterState).getOuterXml(outsideElement);
-    // console.log("subContent", subContent);
-    return xmlTemplater.replaceXml(subContent, text);
+
+  LinkModule.prototype.replaceBy = function (text, outsideElement) {
+    var innerTag = this.getInnerTag().text;
+    var subContent = this.addAttribute(outsideElement, 'xml:space', '"preserve"');
+    return this.manager.getInstance('xmlTemplater').replaceXml(subContent, subContent.text.replace(innerTag, text));
   };
+
+  LinkModule.prototype.addAttribute = function(outsideElement, attribute, value){
+    var subContent = this.getOuterXml(outsideElement);
+    if (subContent.text.indexOf(attribute) < 0) {
+      var replaceRegex = '<' + outsideElement;
+      var replaceWith = '<' + outsideElement + ' ' + attribute + '=' + value;
+      subContent.text = subContent.text.replace(new RegExp(replaceRegex, 'g'), replaceWith);
+    }
+    return subContent;
+  };
+
+  LinkModule.prototype.getInnerTag = function () {
+    var xmlTemplater = this.manager.getInstance('xmlTemplater');
+    var templaterState = this.manager.getInstance('templaterState');
+    return new SubContent(xmlTemplater.content).getInnerTag(templaterState);
+  }
+
+  LinkModule.prototype.getOuterXml = function (outsideElement) {
+    return this.getInnerTag().getOuterXml(outsideElement);
+  }
 
   LinkModule.prototype.finished = function() {};
   return LinkModule;
