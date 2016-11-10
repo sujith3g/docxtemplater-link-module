@@ -257,8 +257,8 @@
     out = docX[name].load(docX[name].loadedContent).setData({
       description: "Testing the link feature",
       link: {
-        text : "Hakuna matata",
-        url : "http://google.com"
+        TEXT : "Hakuna matata",
+        URL : "http://google.com"
       }
     }).render();
     zip = out.getZip();

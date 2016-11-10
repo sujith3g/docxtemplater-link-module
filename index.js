@@ -63,8 +63,8 @@ LinkModule = (function() {
         text = linkData;
     }
     else {
-        url = linkData.url;
-        text = linkData.text;
+        url = linkData.url || linkData.URL;
+        text = linkData.text || linkData.TEXT;
     }
     linkId = this.linkManager.addLinkRels(filename, url);
     this.linkManager.addLinkStyle();
@@ -72,15 +72,32 @@ LinkModule = (function() {
     tagXml = xmlTemplater.fileTypeConfig.tagsXmlArray[0];
     newText = this.getLinkXml({
       linkID : linkId,
-      linkText : text
+      linkText : text,
+      size: this.getLinkFontSize(xmlTemplater, templaterState.fullTextTag)
     });
     return this.replaceBy(newText, tagXml);
   };
 
+  LinkModule.prototype.getLinkFontSize = function(xmlTemplater, fullTextTag) {
+    var beforeTheTag = xmlTemplater.content.slice(0, xmlTemplater.content.indexOf(fullTextTag));
+    beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    var indexOfSz = beforeTheTag.indexOf("sz=\"");
+    if (indexOfSz !== -1 && beforeTheTag.indexOf("extLst") === -1) {
+      var szRegex = /sz="(\d+)"/;
+      var size = szRegex.exec(beforeTheTag);
+      return size[1];
+    }
+    return -1;
+  }
+
   LinkModule.prototype.getLinkXml = function(_arg) {
-    var linkId = _arg.linkID, linkText = _arg.linkText;
+    var linkId = _arg.linkID, linkText = _arg.linkText, size = _arg.size;
     if(this.linkManager.pptx) {
-      return "<a:t> </a:t></a:r><a:r><a:rPr lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
+      if (size !== -1) {
+        return "<a:t> </a:t></a:r><a:r><a:rPr sz=\"" + size + "\" lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
+      } else {
+        return "<a:t> </a:t></a:r><a:r><a:rPr lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t>";
+      }
     }
     return  "<w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink>";
   }
@@ -94,7 +111,6 @@ LinkModule = (function() {
   };
 
   LinkModule.prototype.finished = function() {};
-
   return LinkModule;
 })();
 
