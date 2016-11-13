@@ -111,7 +111,7 @@ var linkModule = new LinkModule();
  
 var docx = new DocxGen()
 	.attachModule(linkModule)
-	.setOption({ fileType : "pptx" })
+	.setOptions({ fileType : "pptx" })
 	.load(content)
 	.setData({
 		link : {
@@ -142,6 +142,7 @@ var linkModule = new LinkModule();
  
 var docx = new DocxGen()
 	.attachModule(linkModule)
+	.setOptions({ fileType : "pptx" })
 	.load(content)
 	.setData({
 		link : "john.smith@example.com"
