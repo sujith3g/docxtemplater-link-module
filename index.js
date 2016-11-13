@@ -55,32 +55,46 @@ LinkModule = (function () {
       return;
     }
     var url, text;
-    if (typeof linkData === 'string') {
-      var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
-      url = emailRegex.test(linkData) ? 'mailto:' + linkData : linkData;
-      text = linkData;
-    }else {
-      url = linkData.url;
-      text = linkData.text;
+    if(typeof linkData === "string") {
+        var emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+        url = emailRegex.test(linkData) ? "mailto:" + linkData : linkData;
+        text = linkData;
+    }
+    else {
+        url = linkData.url || linkData.URL;
+        text = linkData.text || linkData.TEXT;
     }
     linkId = this.linkManager.addLinkRels(filename, url);
     this.linkManager.addLinkStyle();
     var xmlTemplater = this.manager.getInstance('xmlTemplater');
     tagXml = xmlTemplater.fileTypeConfig.tagsXmlArray[0];
     newText = this.getLinkXml({
-      linkID: linkId,
-      linkText: text
+      linkID : linkId,
+      linkText : text,
+      size: this.getLinkFontSize(xmlTemplater, templaterState.fullTextTag)
     });
     return this.replaceBy(newText, tagXml);
   };
 
-  LinkModule.prototype.getLinkXml = function (_arg) {
-    var linkId = _arg.linkID, linkText = _arg.linkText;
-    if (this.linkManager.pptx) {
-      return '</a:t></a:r><a:r><a:rPr lang="en-US" dirty="0" smtClean="0"><a:hlinkClick r:id="rId' + linkId + '"/></a:rPr><a:t>' + linkText + '</a:t></a:r><a:r><a:t>';
+  LinkModule.prototype.getLinkFontSize = function(xmlTemplater, fullTextTag) {
+    var beforeTheTag = xmlTemplater.content.slice(0, xmlTemplater.content.indexOf(fullTextTag));
+    beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    var indexOfSz = beforeTheTag.indexOf("sz=\"");
+    if (indexOfSz !== -1 && beforeTheTag.indexOf("extLst") === -1) {
+      var szRegex = /sz="(\d+)"/;
+      var size = szRegex.exec(beforeTheTag);
+      return size[1];
     }
-    return '</w:t></w:r><w:hyperlink r:id="rId' + linkId + '" w:history="1"><w:bookmarkStart w:id="0" w:name="_GoBack"/><w:bookmarkEnd w:id="0"/><w:r w:rsidR="00052F25" w:rsidRPr="00052F25"><w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr><w:t>' + linkText + '</w:t></w:r></w:hyperlink><w:r><w:t xml:space="preserve">';
-  };
+    return -1;
+  }
+
+  LinkModule.prototype.getLinkXml = function(_arg) {
+    var linkId = _arg.linkID, linkText = _arg.linkText, size = _arg.size;
+    if (this.linkManager.pptx) {
+      return "</a:t></a:r><a:r><a:rPr " + (size !== -1 ? "sz=\"" + size + "\" " : "") + "lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t></a:r><a:r><a:t>";
+    }
+    return  "</w:t></w:r><w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink><w:r><w:t xml:space=\"preserve\">";
+  }
 
   LinkModule.prototype.replaceBy = function (text, outsideElement) {
     var innerTag = this.getInnerTag().text;
@@ -108,7 +122,7 @@ LinkModule = (function () {
     return this.getInnerTag().getOuterXml(outsideElement);
   }
 
-  LinkModule.prototype.finished = function () {};
+  LinkModule.prototype.finished = function() {};
 
   return LinkModule;
 })();
