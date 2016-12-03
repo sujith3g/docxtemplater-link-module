@@ -19,9 +19,6 @@
   },
   "author": "sujith <sujith3g(at)gmail(dot)com>",
   "license": "MIT",
-  "dependencies":{
-    "xmldom": "0.1.22"
-  },
   "devDependencies": {
     "chai": "^1.10.0",
     "docxtemplater": "^2.1.1",
