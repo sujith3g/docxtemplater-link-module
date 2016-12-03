@@ -1,6 +1,6 @@
 {
   "name": "docxtemplater-link-module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Hyperlink module for docxtemplater",
   "main": "index.js",
   "scripts": {
@@ -13,20 +13,21 @@
     "generation",
     "docx"
   ],
-  "devDependencies": {
-    "chai": "^1.10.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sujith3g/docxtemplater-link-module.git"
   },
   "author": "sujith <sujith3g(at)gmail(dot)com>",
   "license": "MIT",
-  "dependencies": {
+  "dependencies":{
+    "xmldom": "0.1.22"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
     "docxtemplater": "^2.1.1",
     "gulp-browserify": "^0.5.0",
     "jszip": "^2.4.0",
-    "xmldom": "^0.1.19"
+    "xmldom": "0.1.22"
   },
   "bugs": {
     "url": "https://github.com/sujith3g/docxtemplater-link-module/issues"
