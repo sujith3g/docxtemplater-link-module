@@ -97,7 +97,7 @@ module.exports = LinkManager = (function() {
       // console.log("ref.length", _ref.length);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tag = _ref[_i];
-        isLinkStyle = (tag.getAttribute("w:styleId") == "Hyperlink");
+        isLinkStyle = (tag.getAttribute("w:styleId") == "Hyperlink") ? true : isLinkStyle;
       }
       //add Hyperlink style if doesn't exist
       //<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:basedOn w:val="DefaultParagraphFont"/><w:uiPriority w:val="99"/><w:unhideWhenUsed/><w:rsid w:val="00052F25"/><w:rPr><w:color w:val="0000FF" w:themeColor="hyperlink"/><w:u w:val="single"/></w:rPr></w:style>
