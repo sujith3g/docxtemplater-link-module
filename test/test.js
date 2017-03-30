@@ -269,6 +269,10 @@
       link: {
         TEXT : "Hakuna matata",
         URL : "http://google.com"
+      },
+      special_link: {
+        TEXT : "Hakuna && matata",
+        URL : "http://google.com"
       }
     }).render();
     zip = out.getZip();
@@ -278,6 +282,13 @@
       expect(relsFile != null).to.equal(true);
       relsFileContent = relsFile.asText();
       return expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId2\"/></a:rPr><a:t>Hakuna matata</a:t>");
+    });
+    it('&-sign should be replaced by &amp;', function() { // &amp;
+      var relsFile, relsFileContent;
+      relsFile = zip.files['ppt/slides/slide2.xml'];
+      expect(relsFile != null).to.equal(true);
+      relsFileContent = relsFile.asText();
+      return expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId4\"/></a:rPr><a:t>Hakuna &amp;&amp; matata</a:t>");
     });
 
     it('should create relationship in rels file', function() {
