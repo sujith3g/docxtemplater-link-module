@@ -358,7 +358,7 @@
     out = docX[name].load(docX[name].loadedContent).setData({
       subsidiaries: [
         {
-          title: "John Smith",
+          title: "John & Smith",
           link: "john-smith@example.com"
         }, {
           title: "Bill Knott",
@@ -373,7 +373,7 @@
       expect(relsFile != null).to.equal(true);
       relsFileContent = relsFile.asText();
 
-      expect(relsFileContent).to.contain("<a:t>John Smith Sales for Q1</a:t>");
+      expect(relsFileContent).to.contain("<a:t>John &amp; Smith Sales for Q1</a:t>");
       expect(relsFileContent).to.contain("<a:t>Bill Knott Sales for Q1</a:t>");
       expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId2\"/></a:rPr><a:t>john-smith@example.com</a:t>");
       return expect(relsFileContent).to.contain("<a:hlinkClick r:id=\"rId3\"/></a:rPr><a:t>bill.knott@example.com</a:t>");
