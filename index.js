@@ -78,7 +78,12 @@ LinkModule = (function () {
 
   LinkModule.prototype.getLinkFontSize = function(xmlTemplater, fullTextTag) {
     var beforeTheTag = xmlTemplater.content.slice(0, xmlTemplater.content.indexOf(fullTextTag));
-    beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    var beforeTheTag1 = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    if (beforeTheTag1.length < 5) {
+      beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("lang="));
+    } else {
+      beforeTheTag = beforeTheTag1;
+    }
     var indexOfSz = beforeTheTag.indexOf("sz=\"");
     if (indexOfSz !== -1 && beforeTheTag.indexOf("extLst") === -1) {
       var szRegex = /sz="(\d+)"/;
