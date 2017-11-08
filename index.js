@@ -78,7 +78,12 @@ LinkModule = (function () {
 
   LinkModule.prototype.getLinkFontSize = function(xmlTemplater, fullTextTag) {
     var beforeTheTag = xmlTemplater.content.slice(0, xmlTemplater.content.indexOf(fullTextTag));
-    beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    var beforeTheTag1 = beforeTheTag.slice(beforeTheTag.lastIndexOf("<a:endParaRPr"));
+    if (beforeTheTag1.length < 5) {
+      beforeTheTag = beforeTheTag.slice(beforeTheTag.lastIndexOf("lang="));
+    } else {
+      beforeTheTag = beforeTheTag1;
+    }
     var indexOfSz = beforeTheTag.indexOf("sz=\"");
     if (indexOfSz !== -1 && beforeTheTag.indexOf("extLst") === -1) {
       var szRegex = /sz="(\d+)"/;
@@ -91,6 +96,9 @@ LinkModule = (function () {
   LinkModule.prototype.getLinkXml = function(_arg) {
     var linkId = _arg.linkID, linkText = _arg.linkText, size = _arg.size;
     if (this.linkManager.pptx) {
+      var replaceRegex = '&';
+      var replaceWith = '&amp;';
+      linkText = linkText.replace(new RegExp(replaceRegex, 'g'), replaceWith);
       return "</a:t></a:r><a:r><a:rPr " + (size !== -1 ? "sz=\"" + size + "\" " : "") + "lang=\"en-US\" dirty=\"0\" smtClean=\"0\"><a:hlinkClick r:id=\"rId" + linkId + "\"/></a:rPr><a:t>" + linkText + "</a:t></a:r><a:r><a:t>";
     }
     return  "</w:t></w:r><w:hyperlink r:id=\"rId" + linkId + "\" w:history=\"1\"><w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/><w:bookmarkEnd w:id=\"0\"/><w:r w:rsidR=\"00052F25\" w:rsidRPr=\"00052F25\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr><w:t>" + linkText + "</w:t></w:r></w:hyperlink><w:r><w:t xml:space=\"preserve\">";
